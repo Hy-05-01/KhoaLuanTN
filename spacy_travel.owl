@@ -1,0 +1,1421 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xml:base="http://www.owl-ontologies.com/travel.owl"
+         xmlns="http://www.owl-ontologies.com/travel.owl#">
+
+<owl:Ontology rdf:about="http://www.owl-ontologies.com/travel.owl">
+  <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1.0 by Holger Knublauch (holger@smi.stanford.edu)</owl:versionInfo>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">An example ontology for tutorial purposes.</rdfs:comment>
+</owl:Ontology>
+
+<owl:ObjectProperty rdf:about="#hasAccommodation">
+  <rdfs:range rdf:resource="#Accommodation"/>
+  <rdfs:domain rdf:resource="#Destination"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#hasActivity">
+  <owl:inverseOf rdf:resource="#isOfferedAt"/>
+  <rdfs:range rdf:resource="#Activity"/>
+  <rdfs:domain rdf:resource="#Destination"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#hasRating">
+  <rdfs:range rdf:resource="#AccommodationRating"/>
+  <rdfs:domain rdf:resource="#Accommodation"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#isOfferedAt">
+  <rdfs:range rdf:resource="#Destination"/>
+  <rdfs:domain rdf:resource="#Activity"/>
+  <owl:inverseOf rdf:resource="#hasActivity"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#hasContact">
+  <rdfs:range rdf:resource="#Contact"/>
+  <rdfs:domain rdf:resource="#Activity"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#hasPart">
+  <rdfs:range rdf:resource="#Destination"/>
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+  <rdfs:domain rdf:resource="#Destination"/>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="#hasCity">
+  <rdfs:domain rdf:resource="#Contact"/>
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#hasEMail">
+  <rdfs:domain rdf:resource="#Contact"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#hasZipCode">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+  <rdfs:domain rdf:resource="#Contact"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#hasStreet">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Contact"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:Class rdf:about="#Sunbathing">
+  <rdfs:subClassOf rdf:resource="#Relaxation"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Relaxation">
+  <owl:disjointWith rdf:resource="#Sports"/>
+  <owl:disjointWith rdf:resource="#Sightseeing"/>
+  <owl:disjointWith rdf:resource="#Adventure"/>
+  <rdfs:subClassOf rdf:resource="#Activity"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Accommodation">
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A place to stay for tourists.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#QuietDestination">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Destination"/>
+        <owl:Class>
+          <owl:complementOf rdf:resource="#FamilyDestination"/>
+        </owl:Class>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A destination that is not frequented by noisy families.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#Destination"/>
+
+<owl:Class rdf:about="#FamilyDestination">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Destination"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#hasAccommodation"/>
+          <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:minCardinality>
+        </owl:Restriction>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#hasActivity"/>
+          <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2</owl:minCardinality>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A destination with at least one accommodation and at least 2 activities.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#BackpackersDestination">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Destination"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#hasAccommodation"/>
+          <owl:someValuesFrom rdf:resource="#BudgetAccommodation"/>
+        </owl:Restriction>
+        <owl:Restriction>
+          <owl:someValuesFrom>
+            <owl:Class>
+              <owl:unionOf rdf:parseType="Collection">
+                <rdf:Description rdf:about="#Sports"/>
+                <rdf:Description rdf:about="#Adventure"/>
+              </owl:unionOf>
+            </owl:Class>
+          </owl:someValuesFrom>
+          <owl:onProperty rdf:resource="#hasActivity"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A destination that provides budget accommodation and offers sport or adventure activities.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#BudgetAccommodation">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Accommodation"/>
+        <owl:Restriction>
+          <owl:someValuesFrom>
+            <owl:Class>
+              <owl:oneOf rdf:parseType="Collection">
+                <rdf:Description rdf:about="#OneStarRating"/>
+                <rdf:Description rdf:about="#TwoStarRating"/>
+              </owl:oneOf>
+            </owl:Class>
+          </owl:someValuesFrom>
+          <owl:onProperty rdf:resource="#hasRating"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Accommodation that has either one or two star rating.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#Sports">
+  <owl:disjointWith rdf:resource="#Adventure"/>
+  <owl:disjointWith rdf:resource="#Relaxation"/>
+  <owl:disjointWith rdf:resource="#Sightseeing"/>
+  <rdfs:subClassOf rdf:resource="#Activity"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Adventure">
+  <owl:disjointWith rdf:resource="#Sports"/>
+  <rdfs:subClassOf rdf:resource="#Activity"/>
+  <owl:disjointWith rdf:resource="#Sightseeing"/>
+  <owl:disjointWith rdf:resource="#Relaxation"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Sightseeing">
+  <owl:disjointWith rdf:resource="#Sports"/>
+  <rdfs:subClassOf rdf:resource="#Activity"/>
+  <owl:disjointWith rdf:resource="#Relaxation"/>
+  <owl:disjointWith rdf:resource="#Adventure"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Activity"/>
+
+<owl:Class rdf:about="#Yoga">
+  <rdfs:subClassOf rdf:resource="#Relaxation"/>
+</owl:Class>
+
+<owl:Class rdf:about="#AccommodationRating">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:oneOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#OneStarRating"/>
+        <rdf:Description rdf:about="#TwoStarRating"/>
+        <rdf:Description rdf:about="#ThreeStarRating"/>
+      </owl:oneOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Consists of exactly three individuals.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#LuxuryHotel">
+  <rdfs:subClassOf rdf:resource="#Hotel"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:hasValue rdf:resource="#ThreeStarRating"/>
+      <owl:onProperty rdf:resource="#hasRating"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#Hotel">
+  <owl:disjointWith rdf:resource="#BedAndBreakfast"/>
+  <owl:disjointWith rdf:resource="#Campground"/>
+  <rdfs:subClassOf rdf:resource="#Accommodation"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Beach">
+  <rdfs:subClassOf rdf:resource="#Destination"/>
+</owl:Class>
+
+<owl:Class rdf:about="#BedAndBreakfast">
+  <owl:disjointWith rdf:resource="#Hotel"/>
+  <rdfs:subClassOf rdf:resource="#Accommodation"/>
+  <owl:disjointWith rdf:resource="#Campground"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Campground">
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:hasValue rdf:resource="#OneStarRating"/>
+      <owl:onProperty rdf:resource="#hasRating"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <owl:disjointWith rdf:resource="#BedAndBreakfast"/>
+  <rdfs:subClassOf rdf:resource="#Accommodation"/>
+  <owl:disjointWith rdf:resource="#Hotel"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Museums">
+  <rdfs:subClassOf rdf:resource="#Sightseeing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#BudgetHotelDestination">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Destination"/>
+        <owl:Restriction>
+          <owl:someValuesFrom>
+            <owl:Class>
+              <owl:intersectionOf rdf:parseType="Collection">
+                <rdf:Description rdf:about="#BudgetAccommodation"/>
+                <rdf:Description rdf:about="#Hotel"/>
+              </owl:intersectionOf>
+            </owl:Class>
+          </owl:someValuesFrom>
+          <owl:onProperty rdf:resource="#hasAccommodation"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A destination with a hotel that is also a budget accommodation.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#City">
+  <rdfs:subClassOf rdf:resource="#UrbanArea"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#hasAccommodation"/>
+      <owl:someValuesFrom rdf:resource="#LuxuryHotel"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#UrbanArea">
+  <owl:disjointWith rdf:resource="#RuralArea"/>
+  <rdfs:subClassOf rdf:resource="#Destination"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Safari">
+  <rdfs:subClassOf rdf:resource="#Adventure"/>
+  <rdfs:subClassOf rdf:resource="#Sightseeing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#RuralArea">
+  <rdfs:subClassOf rdf:resource="#Destination"/>
+  <owl:disjointWith rdf:resource="#UrbanArea"/>
+</owl:Class>
+
+<owl:Class rdf:about="#RetireeDestination">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Destination"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#hasAccommodation"/>
+          <owl:someValuesFrom>
+            <owl:Restriction>
+              <owl:hasValue rdf:resource="#ThreeStarRating"/>
+              <owl:onProperty rdf:resource="#hasRating"/>
+            </owl:Restriction>
+          </owl:someValuesFrom>
+        </owl:Restriction>
+        <owl:Restriction>
+          <owl:someValuesFrom rdf:resource="#Sightseeing"/>
+          <owl:onProperty rdf:resource="#hasActivity"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A destination with at least one three star accommodation and sightseeing opportunities.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#Capital">
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:someValuesFrom rdf:resource="#Museums"/>
+      <owl:onProperty rdf:resource="#hasActivity"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf rdf:resource="#City"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Hiking">
+  <rdfs:subClassOf rdf:resource="#Sports"/>
+</owl:Class>
+
+<owl:Class rdf:about="#BunjeeJumping">
+  <rdfs:subClassOf rdf:resource="#Adventure"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Contact"/>
+
+<owl:Class rdf:about="#NationalPark">
+  <rdfs:subClassOf rdf:resource="#RuralArea"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:someValuesFrom rdf:resource="#Campground"/>
+      <owl:onProperty rdf:resource="#hasAccommodation"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:someValuesFrom rdf:resource="#Hiking"/>
+      <owl:onProperty rdf:resource="#hasActivity"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#Town">
+  <rdfs:subClassOf rdf:resource="#UrbanArea"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Farmland">
+  <rdfs:subClassOf rdf:resource="#RuralArea"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Surfing">
+  <rdfs:subClassOf rdf:resource="#Sports"/>
+</owl:Class>
+
+<AccommodationRating rdf:about="#OneStarRating">
+  <owl:differentFrom rdf:resource="#ThreeStarRating"/>
+  <owl:differentFrom rdf:resource="#TwoStarRating"/>
+</AccommodationRating>
+
+<AccommodationRating rdf:about="#ThreeStarRating">
+  <owl:differentFrom rdf:resource="#TwoStarRating"/>
+  <owl:differentFrom rdf:resource="#OneStarRating"/>
+</AccommodationRating>
+
+<AccommodationRating rdf:about="#TwoStarRating">
+  <owl:differentFrom rdf:resource="#OneStarRating"/>
+  <owl:differentFrom rdf:resource="#ThreeStarRating"/>
+</AccommodationRating>
+
+<RuralArea rdf:about="#Woomera"/>
+
+<Town rdf:about="#Coonabarabran"/>
+
+<LuxuryHotel rdf:about="#FourSeasons"/>
+
+<NationalPark rdf:about="#BlueMountains"/>
+
+<Capital rdf:about="#Canberra"/>
+
+<Beach rdf:about="#BondiBeach"/>
+
+<Beach rdf:about="#CurrawongBeach"/>
+
+<NationalPark rdf:about="#Warrumbungles"/>
+
+<RuralArea rdf:about="#CapeYork"/>
+
+<Capital rdf:about="#Sydney">
+  <hasAccommodation rdf:resource="#FourSeasons"/>
+  <hasPart rdf:resource="#BondiBeach"/>
+  <hasPart rdf:resource="#CurrawongBeach"/>
+</Capital>
+
+<City rdf:about="#Cairns"/>
+
+<City rdf:about="#Aberdeen">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Abidjan">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Abu Dhabi">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Abu Ghraib">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdf:type rdf:resource="#Town"/>
+</City>
+
+<City rdf:about="#Acapulco">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Accra">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Adama">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Addis Ababa">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Adelaide">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Aden">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Adirondacks">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Agra">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Ajmera">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Albuquerque">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Alcaraz">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Aleppo">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Alexandria">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Algiers">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Alicante">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdf:type rdf:resource="#Town"/>
+</City>
+
+<City rdf:about="#Almada">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Almaty">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Amman">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Amritsar">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Amsterdam">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Anacortes">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Anaheim">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Anandpur Sahib">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Anaya">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Anchorage">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Ankara">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Ann Arbor">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Antalya">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Antioch">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Apodaca">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Aqaba">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Arkhangelsk">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Aspen">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Astana">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Athens">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Atlanta">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Atteridgeville">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Auckland">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Auckland, New Zealand">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Austin">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Avdiivka">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Aversa">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Awali">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Axum">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Ayodhya">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Babylon">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Bacharach">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Baghdad">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Bakersfield">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Bakhmut">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Ballarat">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Baltimore">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Bamberg">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Bangkok">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Barcelona">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Activity rdf:about="#Baseball">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Activity>
+
+<City rdf:about="#Basra">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Baton Rouge">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Bay Area">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Beijing">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Beirut">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Beit Hanoun">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Belfast">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Belgorod">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Belgrade">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Bendigo">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Bengaluru">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Benghazi">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Berat">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Bergen">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Berlin">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Berne">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Beryslav">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Bethlehem">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Beverly Hills">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Bilbao">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Bilopillia">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Biloxi">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Birgi">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Birmingham">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Bitez">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Blumenau">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdf:type rdf:resource="#Town"/>
+</City>
+
+<City rdf:about="#Boca Raton">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Bodrum">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Bogota">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Bogotá">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Bohodukhiv">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Boise">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Bologna">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Bordeaux">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Boston">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Boulder">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Bournemouth">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Brampton">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Brasilia">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Brattleboro">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Brighton">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Brisbane">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Bristol">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Bronx">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Brooklyn">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Bryansk">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Bucharest">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Budapest">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Buenos Aires">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Melbourne">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Tripoli">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Varanasi">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Rhodes">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Jeju Island">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Kamianske">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Umm al-Quwain">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Istanbul">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdf:type rdf:resource="#Town"/>
+</City>
+
+<City rdf:about="#Hyderabad">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Pittsburgh">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Haditha">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Dushikou">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Nantes">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Chennai">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Lamu">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Chaozhou">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Rivera">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Prague">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Kobe">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Kilifi">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdf:type rdf:resource="#Town"/>
+</City>
+
+<City rdf:about="#Ivano-Frankivsk">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Munich">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdf:type rdf:resource="#Town"/>
+</City>
+
+<City rdf:about="#Mwanza">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Perpignan">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Lida">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Karachi">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Warner Robins">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Mian Channu">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Pocheon">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Oklahoma City">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Oliva">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Walvis Bay">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Palo Alto">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Santiago del Estero">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Seoul">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Lisbon">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Lekki">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Nashville">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Lubbock">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Stavoren">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Kansas City">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Voronezh">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#West Palm Beach">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Wadowice">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Novosibirsk">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Panama City">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Darjeeling">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Doha">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Crotone">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Kherson">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Watsonville">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Elche">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdf:type rdf:resource="#Town"/>
+</City>
+
+<City rdf:about="#Hoogwoud">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Vovchansk">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Osan">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Activity rdf:about="#Dungeons &amp; Dragons">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Activity>
+
+<City rdf:about="#Ushuaia">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Huntington Beach">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Simi Valley">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Chiayi">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Cambridge">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Vancouver">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#San Francisco">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Shakhtarsk">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Hanover">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Herrerías">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Vaughan">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Omsk">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Wuhan">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Guwahati">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Madrid">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Najaf">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Oakland">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Luanda">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Schiphol">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Nottingham">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Çanakkale">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Topeka">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Choum">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Dalian">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Hollywood">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Simferopol">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Santa Ana Zegache">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Kuopio">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Dessie">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Zaporizhzhia">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Zunyi">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Zhengzhou">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Monterrey">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Druzhkivka">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Waterloo, Iowa">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Oslo">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Skardu">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Monte Carlo">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Cincinnati">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Xi'an">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Rabat">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Wellington">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Sochi">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Nairobi">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Manila">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Chongqing">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdf:type rdf:resource="#Town"/>
+</City>
+
+<City rdf:about="#Warsaw">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Sopot">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Guangzhou">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<Town rdf:about="#Zorita">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Town>
+
+<City rdf:about="#Indianapolis">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#El Paso">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Pivdenne">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Tunis">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Milwaukee">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Colombo">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Coachella Valley">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Xiamen">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Murmansk">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Tijuana">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Glen Burnie">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Tallahassee">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Orikhiv">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Quanzhou">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Lagos">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Puno">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#French Hill">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Marhanets">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Ningbo">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Kyiv">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Nouakchott">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Siversk">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#New Delhi">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Donetsk">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Montemorelos">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdf:type rdf:resource="#Town"/>
+</City>
+
+<City rdf:about="#Monterey">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Waterford">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Southampton">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Kunduz">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Nanjing">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Incheon">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Montpellier">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Izmit">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Kansai">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+<City rdf:about="#Mazatlán">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</City>
+
+
+</rdf:RDF>

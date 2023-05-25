@@ -1,0 +1,1 @@
+Anna Stewart meets David Nichols, who inadvertently created the world's first-ever IoT device: a humble vending machine that he and his fellow computer science students hooked up to the ethernet so they could monitor its supplies of coke.
